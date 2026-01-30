@@ -29,9 +29,9 @@ pipeline
                     credentialsId: "dockerhub-login",
                     usernameVariable: "username",
                     passwordVariable: "password"
-                    sh "docker login -u $username -p $password"
-                    sh "docker tag flask-app $username/flask-app:latest"
-                    sh "docker push $username/flask-app:latest"
+                    sh "docker login -u ${env.username} -p ${env.password}"
+                    sh "docker tag flask-app ${env.username}/flask-app:latest"
+                    sh "docker push ${env.username}/flask-app:latest"
                     sh "docker push completed"
                 )])
             }
