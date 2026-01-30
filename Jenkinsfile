@@ -28,19 +28,20 @@ pipeline {
         }
 
         stage("push dockerHub") {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: "dockerhub-login",
-                    usernameVariable: "username",
-                    passwordVariable: "password"
-                )]) 
-                     sh "docker login -u ${env.username} -p ${env.password}"
-                    sh "docker tag flask-app ${env.username}/flask-app:latest"
-                    sh "docker push ${env.username}/flask-app:latest"
-                    sh "docker push completed"
-                }
-            }
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: "dockerhub-login",
+            usernameVariable: "username",
+            passwordVariable: "password"
+        )]) {
+            sh "docker login -u ${env.username} -p ${env.password}"
+            sh "docker tag flask-app ${env.username}/flask-app:latest"
+            sh "docker push ${env.username}/flask-app:latest"
+            echo "Docker push completed"
         }
+    }
+}
+
 
         stage("deploy to server") {
             steps {
