@@ -1,36 +1,39 @@
-pipeline
-{
+pipeline {
     agent any
 
-    stages{
-        stage("code clone"){
-            steps{
-                sh "git to clone "
+    stages {
+
+        stage("code clone") {
+            steps {
+                echo "Cloning repository"
                 git url: "https://github.com/spide1/two-tier-flask-app.git", branch: "master"
-                sh "git clone completed"
+                echo "Git clone completed"
             }
         }
-        stage("build"){
-            steps{
-                sh "echo build started"
+
+        stage("build") {
+            steps {
+                echo "Build started"
                 sh "docker build -t flask-app ."
-                sh "echo build completed"
+                echo "Build completed"
             }
         }
-        stage("test"){
-            steps{
-                sh "test code"
-                sh "test completed"
+
+        stage("test") {
+            steps {
+                echo "Running tests"
+                // add real test commands here later
+                echo "Tests completed"
             }
         }
-        stage("push dockerHub"){
-            steps{
+
+        stage("push dockerHub") {
+            steps {
                 withCredentials([usernamePassword(
                     credentialsId: "dockerhub-login",
                     usernameVariable: "username",
                     passwordVariable: "password"
-                )])
-                {
+                )]) 
                      sh "docker login -u ${env.username} -p ${env.password}"
                     sh "docker tag flask-app ${env.username}/flask-app:latest"
                     sh "docker push ${env.username}/flask-app:latest"
@@ -38,18 +41,20 @@ pipeline
                 }
             }
         }
-        stage("deploy to server"){
-            steps{
-                sh "docker compose down && docker compose up -d --build"
 
+        stage("deploy to server") {
+            steps {
+                sh "docker compose down && docker compose up -d --build"
             }
         }
-        post{
-            success{
-                sh "echo Pipeline succeeded!"
-            }
-            failure{
-                sh "echo Pipeline failed!"
+    }
+
+    post {
+        success {
+            echo "Pipeline succeeded!"
+        }
+        failure {
+            echo "Pipeline failed!"
         }
     }
 }
