@@ -1,7 +1,7 @@
 pipeline {
     agent {label "spider"}
 
-    stages {
+    stages { 
 
         stage("code clone") {
             steps {
