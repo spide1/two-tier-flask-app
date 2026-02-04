@@ -4,7 +4,9 @@ pipeline {
     
 
     stages {
-
+            stage("hello"){
+                echo "hello agent"
+            }
         stage("code clone") {
             steps {
                 echo "Cloning repository"
